@@ -4,15 +4,15 @@
 const EventEmitter = require("events")
 const Enum = require("enum")
 
-import Socket from './peer/socket';
-import Connection from './peer/connection';
-import DataConnection from './peer/dataConnection';
-import MediaConnection from './peer/mediaConnection';
-import SFURoom from './peer/sfuRoom';
-import MeshRoom from './peer/meshRoom';
-import util from './shared/util';
-import logger from './shared/logger';
-import config from './shared/config';
+import Socket from './peer/socket.js';
+import Connection from './peer/connection.js';
+import DataConnection from './peer/dataConnection.js';
+import MediaConnection from './peer/mediaConnection.js';
+import SFURoom from './peer/sfuRoom.js';
+import MeshRoom from './peer/meshRoom.js';
+import util from './shared/util.js';
+import logger from './shared/logger.js';
+import config from './shared/config.js';
 
 const PeerEvents = new Enum([
   'open',
