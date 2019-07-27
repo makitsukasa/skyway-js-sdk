@@ -1,8 +1,8 @@
 // import EventEmitter from 'events.js';
 // import Enum from 'enum';
 
-const EventEmitter = require("events")
-const Enum = require("enum")
+const EventEmitter = require("events");
+const Enum = require("enum");
 
 import Socket from './peer/socket.js';
 import Connection from './peer/connection.js';

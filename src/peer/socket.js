@@ -1,9 +1,13 @@
-import io from 'socket.io-client';
-import EventEmitter from 'events';
-import queryString from 'query-string';
+// import io from 'socket.io-client';
+// import EventEmitter from 'events';
+// import queryString from 'query-string';
 
-import config from '../shared/config';
-import logger from '../shared/logger';
+const io = require("socket.io-client");
+const EventEmitter = require("events");
+const queryString = require("query-string");
+
+import config from '../shared/config.js';
+import logger from '../shared/logger.js';
 
 import { version } from '../../package.json';
 
