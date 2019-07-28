@@ -1,4 +1,4 @@
-const { version } = require('../../package.json');
+const version = require('../../package.json');
 const config = require('../config');
 const replaceExamplesApiKey = require('../shared/replace-examples-api-key');
 const uploadSdkToS3 = require('../shared/upload-sdk-to-s3');
