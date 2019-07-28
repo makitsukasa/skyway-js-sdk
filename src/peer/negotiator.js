@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
 import Enum from 'enum';
 
-import sdpUtil from '../shared/sdpUtil';
-import logger from '../shared/logger';
+import sdpUtil from '../shared/sdpUtil.js';
+import logger from '../shared/logger.js';
 
 const NegotiatorEvents = new Enum([
   'addStream',

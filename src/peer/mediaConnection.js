@@ -1,8 +1,8 @@
 import Enum from 'enum';
 
-import Negotiator from './negotiator';
-import Connection from './connection';
-import logger from '../shared/logger';
+import Negotiator from './negotiator.js';
+import Connection from './connection.js';
+import logger from '../shared/logger.js';
 
 const MCEvents = new Enum(['stream']);
 

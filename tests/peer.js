@@ -2,15 +2,15 @@ import assert from 'power-assert';
 import sinon from 'sinon';
 import EventEmitter from 'events';
 
-import MediaConnection from '../src/peer/mediaConnection';
-import DataConnection from '../src/peer/dataConnection';
-import SFURoom from '../src/peer/sfuRoom';
-import MeshRoom from '../src/peer/meshRoom';
-import Room from '../src/peer/room';
-import Socket from '../src/peer/socket';
-import util from '../src/shared/util';
-import config from '../src/shared/config';
-import logger from '../src/shared/logger';
+import MediaConnection from '../src/peer/mediaConnection.js';
+import DataConnection from '../src/peer/dataConnection.js';
+import SFURoom from '../src/peer/sfuRoom.js';
+import MeshRoom from '../src/peer/meshRoom.js';
+import Room from '../src/peer/room.js';
+import Socket from '../src/peer/socket.js';
+import util from '../src/shared/util.js';
+import config from '../src/shared/config.js';
+import logger from '../src/shared/logger.js';
 
 import peerInjector from 'inject-loader!../src/peer';
 

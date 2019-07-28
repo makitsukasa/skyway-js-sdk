@@ -1,4 +1,4 @@
-import logger from '../../src/shared/logger';
+import logger from '../../src/shared/logger.js';
 
 import assert from 'power-assert';
 import sinon from 'sinon';

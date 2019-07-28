@@ -1,10 +1,10 @@
 import EventEmitter from 'events';
 import Enum from 'enum';
 
-import Negotiator from './negotiator';
-import util from '../shared/util';
-import logger from '../shared/logger';
-import config from '../shared/config';
+import Negotiator from './negotiator.js';
+import util from '../shared/util.js';
+import logger from '../shared/logger.js';
+import config from '../shared/config.js';
 
 const ConnectionEvents = new Enum([
   'candidate',

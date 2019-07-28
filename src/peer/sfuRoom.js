@@ -2,7 +2,7 @@ import Enum from 'enum';
 
 import Room from './room';
 import Negotiator from './negotiator';
-import logger from '../shared/logger';
+import logger from '../shared/;
 import sdpUtil from '../shared/sdpUtil';
 import util from '../shared/util';
 

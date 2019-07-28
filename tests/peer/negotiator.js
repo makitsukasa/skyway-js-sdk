@@ -1,8 +1,8 @@
 import assert from 'power-assert';
 import sinon from 'sinon';
 
-import Negotiator from '../../src/peer/negotiator';
-import logger from '../../src/shared/logger';
+import Negotiator from '../../src/peer/negotiator.js';
+import logger from '../../src/shared/logger.js';
 
 describe('Negotiator', () => {
   describe('Constructor', () => {

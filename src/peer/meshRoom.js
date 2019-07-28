@@ -1,11 +1,11 @@
 import Enum from 'enum';
 
-import Room from './room';
-import Connection from './connection';
-import MediaConnection from './mediaConnection';
-import DataConnection from './dataConnection';
-import logger from '../shared/logger';
-import config from '../shared/config';
+import Room from './room.js';
+import Connection from './connection.js';
+import MediaConnection from './mediaConnection.js';
+import DataConnection from './dataConnection.js';
+import logger from '../shared/logger.js';
+import config from '../shared/config.js';
 
 const MessageEvents = ['broadcastByDC', 'getPeers'];
 

@@ -2,11 +2,11 @@ import BinaryPack from 'js-binarypack';
 import Enum from 'enum';
 import sizeof from 'object-sizeof';
 
-import Negotiator from './negotiator';
-import Connection from './connection';
-import util from '../shared/util';
-import logger from '../shared/logger';
-import config from '../shared/config';
+import Negotiator from './negotiator.js';
+import Connection from './connection.js';
+import util from '../shared/util.js';
+import logger from '../shared/logger.js';
+import config from '../shared/config.js';
 
 const DCEvents = new Enum(['open', 'data', 'error']);
 
