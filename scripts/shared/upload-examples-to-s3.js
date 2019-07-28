@@ -74,5 +74,8 @@ function getContentType(filePath) {
   if (filePath.endsWith('.js')) {
     cType = 'application/javascript';
   }
+  if (filePath.endsWith('.json')) {
+    cType = 'application/json';
+  }
   return cType;
 }
