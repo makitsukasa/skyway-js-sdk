@@ -1,4 +1,5 @@
 const Peer = window.Peer;
+const clm = window.clm;
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
