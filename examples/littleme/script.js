@@ -84,16 +84,6 @@ const Peer = window.Peer;
   var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
   classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
 
-  // 描画ループ
-  function drawLoop() {
-    requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
-    var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
-    var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
-    var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
-    showEmotionData(emotion);                             // ★感情データを表示
-  }
-  drawLoop();                                             // drawLoop 関数をトリガー
-
   // ★感情データの表示
   function showEmotionData(emo) {
     var str ="";                                          // データの文字列を入れる変数
@@ -103,4 +93,14 @@ const Peer = window.Peer;
     }
     localExpression.innerHTML = str;                                  // データ文字列の表示
   }
+
+  // 描画ループ
+  function drawLoop() {
+    requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
+    var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
+    var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
+    var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
+    showEmotionData(emotion);                             // ★感情データを表示
+  }
+  drawLoop();                                             // drawLoop 関数をトリガー
 })();
