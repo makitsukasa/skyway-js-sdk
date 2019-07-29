@@ -2,25 +2,30 @@ const Peer = window.Peer;
 const localExpression = document.getElementById("localExpression");
 const localVideo = document.getElementById('js-local-stream');
 
+const localStream = navigator.mediaDevices.getUserMedia({
+  audio: true,
+  video: true,
+})
+.catch(console.error);
+
+// Render local stream
+localVideo.muted = true;
+localStream.then((stream) => {                                // メディアデバイスが取得できたら video 要素にストリームを渡す
+  try {                                                 // https://stackoverflow.com/questions/51101408
+    localVideo.srcObject = stream;
+  } catch (error) {
+    localVideo.src = window.URL.createObjectURL(stream);
+  }
+});
+localVideo.playsInline = true;
+localVideo.play().catch(console.error);
+
 (async function main() {
   const localId = document.getElementById('js-local-id');
   const callTrigger = document.getElementById('js-call-trigger');
   const closeTrigger = document.getElementById('js-close-trigger');
   const remoteVideo = document.getElementById('js-remote-stream');
   const remoteId = document.getElementById('js-remote-id');
-
-  const localStream = await navigator.mediaDevices
-    .getUserMedia({
-      audio: true,
-      video: true,
-    })
-    .catch(console.error);
-
-  // Render local stream
-  localVideo.muted = true;
-  localVideo.srcObject = localStream;
-  localVideo.playsInline = true;
-  await localVideo.play().catch(console.error);
 
   const peer = new Peer({
     key: window.__SKYWAY_KEY__,
@@ -100,6 +105,7 @@ function showEmotionData(emo) {
 function drawLoop() {
   requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
   var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
+  if(!positions) return;
   var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
   var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
   showEmotionData(emotion);                             // ★感情データを表示
