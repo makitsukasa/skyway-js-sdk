@@ -20,6 +20,37 @@ localStream.then((stream) => {                                // メディアデ
 localVideo.playsInline = true;
 localVideo.play().catch(console.error);
 
+// clmtrackr の開始
+var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
+tracker.init(pModel);             // tracker を所定のフェイスモデル（※1）で初期化
+tracker.start(localVideo);        // video 要素内でフェイストラッキング開始
+
+// 感情分類の開始
+var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
+classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
+
+// ★感情データの表示
+function showEmotionData(emo) {
+  var str ="";                                          // データの文字列を入れる変数
+  for(var i = 0; i < emo.length; i++) {                 // 全ての感情（6種類）について
+    str += emo[i].emotion + ": "                        // 感情名
+        + emo[i].value.toFixed(3) + "<br>";             // 感情の程度（小数第3位まで）
+  }
+  localExpression.innerHTML = str;                      // データ文字列の表示
+}
+
+// 描画ループ
+function drawLoop() {
+  requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
+  var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
+  if(!positions) return;
+  var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
+  var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
+  showEmotionData(emotion);                             // ★感情データを表示
+}
+drawLoop();                                             // drawLoop 関数をトリガー
+
+
 (async function main() {
   const localId = document.getElementById('js-local-id');
   const callTrigger = document.getElementById('js-call-trigger');
@@ -81,33 +112,3 @@ localVideo.play().catch(console.error);
   peer.on('error', console.error);
 
 })();
-
-// clmtrackr の開始
-var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
-tracker.init(pModel);             // tracker を所定のフェイスモデル（※1）で初期化
-tracker.start(localVideo);        // video 要素内でフェイストラッキング開始
-
-// 感情分類の開始
-var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
-classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
-
-// ★感情データの表示
-function showEmotionData(emo) {
-  var str ="";                                          // データの文字列を入れる変数
-  for(var i = 0; i < emo.length; i++) {                 // 全ての感情（6種類）について
-    str += emo[i].emotion + ": "                        // 感情名
-        + emo[i].value.toFixed(3) + "<br>";             // 感情の程度（小数第3位まで）
-  }
-  localExpression.innerHTML = str;                      // データ文字列の表示
-}
-
-// 描画ループ
-function drawLoop() {
-  requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
-  var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
-  if(!positions) return;
-  var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
-  var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
-  showEmotionData(emotion);                             // ★感情データを表示
-}
-drawLoop();                                             // drawLoop 関数をトリガー
