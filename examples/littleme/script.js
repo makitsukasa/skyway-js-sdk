@@ -1,5 +1,4 @@
 const Peer = window.Peer;
-const clm = window.clm;
 
 (async function main() {
   const localVideo = document.getElementById('js-local-stream');
@@ -77,7 +76,7 @@ const clm = window.clm;
   peer.on('error', console.error);
 
   // clmtrackr の開始
-  var tracker = new clm.tracker();  // tracker オブジェクトを作成
+  var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
   tracker.init(pModel);             // tracker を所定のフェイスモデル（※1）で初期化
   tracker.start(localVideo);        // video 要素内でフェイストラッキング開始
 
