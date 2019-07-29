@@ -7,6 +7,7 @@ const Peer = window.Peer;
   const closeTrigger = document.getElementById('js-close-trigger');
   const remoteVideo = document.getElementById('js-remote-stream');
   const remoteId = document.getElementById('js-remote-id');
+  const localExpression = document.getElementById("localExpression");
 
   const localStream = await navigator.mediaDevices
     .getUserMedia({
@@ -90,8 +91,6 @@ const Peer = window.Peer;
     var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
     var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
     showEmotionData(emotion);                             // ★感情データを表示
-    context.clearRect(0, 0, canvas.width, canvas.height); // canvas をクリア
-    tracker.draw(canvas);                                 // canvas にトラッキング結果を描画
   }
   drawLoop();                                             // drawLoop 関数をトリガー
 
@@ -102,7 +101,6 @@ const Peer = window.Peer;
       str += emo[i].emotion + ": "                        // 感情名
           + emo[i].value.toFixed(1) + "<br>";            // 感情の程度（小数第一位まで）
     }
-    var dat = document.getElementById("dat");             // データ表示用div要素の取得
-    dat.innerHTML = str;                                  // データ文字列の表示
+    localExpression.innerHTML = str;                                  // データ文字列の表示
   }
 })();
