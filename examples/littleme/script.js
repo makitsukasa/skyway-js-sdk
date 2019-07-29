@@ -8,8 +8,8 @@ const localStream = navigator.mediaDevices.getUserMedia({
 })
 .catch(console.error);
 
-// Render local stream
-localVideo.muted = true;
+console.log("1");
+
 localStream.then((stream) => {                                // メディアデバイスが取得できたら video 要素にストリームを渡す
   try {                                                 // https://stackoverflow.com/questions/51101408
     localVideo.srcObject = stream;
@@ -17,12 +17,11 @@ localStream.then((stream) => {                                // メディアデ
     localVideo.src = window.URL.createObjectURL(stream);
   }
 });
-localVideo.playsInline = true;
-localVideo.play().catch(console.error);
 
 // clmtrackr の開始
 var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
 tracker.init(pModel);             // tracker を所定のフェイスモデル（※1）で初期化
+console.log(tracker);
 tracker.start(localVideo);        // video 要素内でフェイストラッキング開始
 
 // 感情分類の開始
@@ -43,13 +42,19 @@ function showEmotionData(emo) {
 function drawLoop() {
   requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
   var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
-  if(!positions) return;
+  if(!positions){
+    console.log("no face detected");
+    return;
+  }
   var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
   var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
   showEmotionData(emotion);                             // ★感情データを表示
 }
 drawLoop();                                             // drawLoop 関数をトリガー
 
+localVideo.muted = true;
+localVideo.playsInline = true;
+localVideo.play().catch(console.error);
 
 (async function main() {
   const localId = document.getElementById('js-local-id');
