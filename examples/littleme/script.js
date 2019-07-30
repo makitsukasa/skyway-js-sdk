@@ -72,7 +72,7 @@ function drawLoop() {
     showEmotionData(emotion);                             // ★感情データを表示
     try{
       dataConnection.send(JSON.stringify(emotion));
-      // postHttpRequest();
+      postHttpRequest();
     }
     catch(e){
       console.log("cahched error: ", e);
