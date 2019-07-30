@@ -45,9 +45,13 @@ function drawLoop() {
     var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
     var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
     showEmotionData(emotion);                             // ★感情データを表示
+    try{
+      dataConnection.send(emotion);
+    }
+    catch(e){}
   }
   else{
-    localExpression.innerHTML = "no face detected<br><br><br><br><br>";  // データ文字列の表示
+    localExpression.innerHTML = "no face detected<br><br><br><br><br><br>";  // データ文字列の表示
   }
 }
 drawLoop();                                             // drawLoop 関数をトリガー
@@ -73,6 +77,7 @@ drawLoop();                                             // drawLoop 関数をト
     }
 
     const mediaConnection = peer.call(remoteId.value, localStream);
+    const dataConnection = peer.connect(remoteId.value);
 
     mediaConnection.on('stream', async stream => {
       // Render remote stream for caller
@@ -108,6 +113,36 @@ drawLoop();                                             // drawLoop 関数をト
     });
 
     closeTrigger.addEventListener('click', () => mediaConnection.close(true));
+  });
+
+  peer.on('connection', dataConnection => {
+    dataConnection.once('open', async () => {
+      console.log(`=== DataConnection has been opened ===\n`);
+
+      sendTrigger.addEventListener('click', onClickSend);
+    });
+
+    dataConnection.on('data', data => {
+      console.log(`Remote: ${data}\n`);
+    });
+
+    dataConnection.once('close', () => {
+      console.log(`=== DataConnection has been closed ===\n`);
+      sendTrigger.removeEventListener('click', onClickSend);
+    });
+
+    // Register closing handler
+    closeTrigger.addEventListener('click', () => dataConnection.close(), {
+      once: true,
+    });
+
+    function onClickSend() {
+      const data = localText.value;
+      dataConnection.send(data);
+
+      console.log(`You: ${data}\n`);
+      localText.value = '';
+    }
   });
 
   peer.on('error', console.error);
