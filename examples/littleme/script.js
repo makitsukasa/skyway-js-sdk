@@ -1,27 +1,24 @@
 const Peer = window.Peer;
-const localExpression = document.getElementById("localExpression");
+const localExpression = document.getElementById("local-expression");
 const localVideo = document.getElementById('js-local-stream');
 
 const localStream = navigator.mediaDevices.getUserMedia({
+  video: {
+    facingMode: "user",
+    native: false
+  },
   audio: true,
-  video: true,
 })
 .catch(console.error);
 
-console.log("1");
+// console.log("1");
 
-localStream.then((stream) => {                                // メディアデバイスが取得できたら video 要素にストリームを渡す
-  try {                                                 // https://stackoverflow.com/questions/51101408
-    localVideo.srcObject = stream;
-  } catch (error) {
-    localVideo.src = window.URL.createObjectURL(stream);
-  }
+localStream.then((stream) => {
+  localVideo.srcObject = stream;
 });
-
 // clmtrackr の開始
 var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
 tracker.init(pModel);             // tracker を所定のフェイスモデル（※1）で初期化
-console.log(tracker);
 tracker.start(localVideo);        // video 要素内でフェイストラッキング開始
 
 // 感情分類の開始
@@ -53,8 +50,6 @@ function drawLoop() {
 drawLoop();                                             // drawLoop 関数をトリガー
 
 localVideo.muted = true;
-localVideo.playsInline = true;
-localVideo.play().catch(console.error);
 
 (async function main() {
   const localId = document.getElementById('js-local-id');

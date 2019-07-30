@@ -20,18 +20,19 @@
           <button id="js-close-trigger">Close</button>
         </div>
       </div>
-      <div id="localExpression"></div>  <!-- データ表示用 div 要素 -->
+      <div id="local-expression"></div>  <!-- データ表示用 div 要素 -->
     </div>
+
     <script src="https://cdn.webrtc.ecl.ntt.com/skyway-1.2.0.min.js"></script>
     <script type="module" src="../../src/peer.js"></script>
     <script src="../shared/key.js"></script>
 
-    <script src="clmtrackr.min.js"></script>            <!-- clmtrackr のメインライブラリの読み込み -->
+    <script src="clmtrackr.js"></script>            <!-- clmtrackr のメインライブラリの読み込み -->
     <script src="model_pca_20_svm_emotion.js"></script> <!-- ★顔モデル（※1）の読み込み -->
     <script src="emotionClassifier.js"></script>        <!-- ★感情を分類する外部関数の読み込み -->
     <script src="emotionModel.js"></script>             <!-- ★感情モデル（※2）の読み込み -->
 
-    <script src="./script.js?version=4f7fc4a4bd891e18e781738d97476d139966f6df"></script>
+    <script src="./script.js"></script>
 
   </body>
 </html>
