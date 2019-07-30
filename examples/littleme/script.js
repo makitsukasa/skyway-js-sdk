@@ -37,7 +37,7 @@ tracker.start(localVideo);        // video 要素内でフェイストラッキ�
 var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
 classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
 
-function postHttpRequest(){
+function postHttpRequest(emo){
   var xmlHttpRequest = new XMLHttpRequest();
   xmlHttpRequest.onreadystatechange = function()
   {
@@ -52,7 +52,7 @@ function postHttpRequest(){
       }
   }
 
-  xmlHttpRequest.open('GET', 'http://192.168.11.100:8888/?b=72');
+  xmlHttpRequest.open('GET', `http://192.168.11.100:8888/?r=${emo[0]}&g=${emo[1]}&b=${emo[2]}`);
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -125,7 +125,7 @@ function drawLoop() {
     localExpression.style.background = rgb2hex(getEmotionColor(emotion));
     try{
       dataConnection.send(JSON.stringify(emotion));
-      // postHttpRequest();
+      postHttpRequest(JSON.stringify(getEmotionColor(emotion)));
     }
     catch(e){
       console.log("cahched error: ", e);
