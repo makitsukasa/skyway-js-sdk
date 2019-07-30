@@ -1,12 +1,13 @@
 const Peer = window.Peer;
 const localExpression = document.getElementById("local-expression");
+const remoteExpression = document.getElementById("remote-expression");
 const localVideo = document.getElementById('js-local-stream');
 var mediaConnection = null;
 var dataConnection = null;
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: true,
+  audio: false,
 })
 .catch(console.error);
 
@@ -44,7 +45,7 @@ function postHttpRequest(){
       }
   }
 
-  xmlHttpRequest.open('GET', '192.168.11.100:8888?angry=0.5&sad=0.2');
+  xmlHttpRequest.open('GET', 'http://127.0.0.1:8888/?b=72');
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -52,14 +53,41 @@ function postHttpRequest(){
   xmlHttpRequest.send();
 }
 
+function getEmotionColor(emo){
+  var dic = {
+    "angry": [1, 0, 0],
+    "disgusted": [0, 1, 0],
+    "fear": [0, 1, 1],
+    "sad": [0, 0, 1],
+    "surprised": [1, 0, 1],
+    "happy": [1, 1, 0],
+  };
+  color = [0, 0, 0];
+  for(var i = 0; i < emo.length; i++) {                 // 全ての感情（6種類）について
+    for(var j = 0; j < 3; j++){
+      color[j] += dic[emo[i].emotion][j] * emo[i].value;
+      if(color[j] > 1){
+        color[j] = 1
+      }
+    }
+  }
+  return color;
+}
+
+function rgb2hex( rgb ){
+	return "#" + rgb.map(function (value) {
+		return ("0" + Math.round(value * 255).toString( 16 ) ).slice( -2 );
+	} ).join("");
+}
+
 // ★感情データの表示
-function showEmotionData(emo) {
+function getEmotionData(emo) {
   var str ="";                                          // データの文字列を入れる変数
   for(var i = 0; i < emo.length; i++) {                 // 全ての感情（6種類）について
     str += emo[i].emotion + ": "                        // 感情名
         + emo[i].value.toFixed(3) + "<br>";             // 感情の程度（小数第3位まで）
   }
-  localExpression.innerHTML = str;                      // データ文字列の表示
+  return str;                      // データ文字列の表示
 }
 
 // 描画ループ
@@ -69,10 +97,10 @@ function drawLoop() {
   if(positions){
     var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
     var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
-    showEmotionData(emotion);                             // ★感情データを表示
+    localExpression.innerHTML = getEmotionData(emotion);                             // ★感情データを表示
+    localExpression.style.background = rgb2hex(getEmotionColor(emotion));
     try{
       dataConnection.send(JSON.stringify(emotion));
-      postHttpRequest();
     }
     catch(e){
       console.log("cahched error: ", e);
@@ -80,6 +108,7 @@ function drawLoop() {
   }
   else{
     localExpression.innerHTML = "no face detected<br><br><br><br><br><br>";  // データ文字列の表示
+    localExpression.style.background = "white";
   }
 }
 drawLoop();                                             // drawLoop 関数をトリガー
@@ -152,7 +181,10 @@ drawLoop();                                             // drawLoop 関数をト
     });
 
     dataConnection.on('data', data => {
-      console.log(`Remote: ${data}\n`);
+      emotion = JSON.parse(data);
+      console.log(`Remote: ${emotion}\n`);
+      remoteExpression.innerHTML = getEmotionData(emotion);                             // ★感情データを表示
+      remoteExpression.style.background = rgb2hex(getEmotionColor(emotion));
     });
 
     dataConnection.once('close', () => {
