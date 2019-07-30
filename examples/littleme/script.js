@@ -1,6 +1,8 @@
 const Peer = window.Peer;
 const localExpression = document.getElementById("local-expression");
 const localVideo = document.getElementById('js-local-stream');
+var mediaConnection = null;
+var dataConnection = null;
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
@@ -9,7 +11,7 @@ const userMedia = navigator.mediaDevices.getUserMedia({
 .catch(console.error);
 
 localVideo.muted = true;
-localStream = null;
+var localStream = null;
 
 userMedia.then(stream => {
   localVideo.srcObject = stream;
@@ -44,13 +46,13 @@ function postHttpRequest(){
       }
   }
 
-  xmlHttpRequest.open( 'POST', '192.168.11.100:8888' );
+  xmlHttpRequest.open('GET', '192.168.11.100:8888');
 
   // サーバに対して解析方法を指定する
-  xmlHttpRequest.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+  xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
   // データをリクエスト ボディに含めて送信する
-  xmlHttpRequest.send( EncodeHTMLForm( data ) );
+  xmlHttpRequest.send(EncodeHTMLForm( data ));
 }
 
 // ★感情データの表示
@@ -72,10 +74,12 @@ function drawLoop() {
     var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
     showEmotionData(emotion);                             // ★感情データを表示
     try{
-      dataConnection.send(emotion);
-      postHttpRequest();
+      dataConnection.send("hoge");
+      // postHttpRequest();
     }
-    catch(e){}
+    catch(e){
+      console.log("cahched error: ", e);
+    }
   }
   else{
     localExpression.innerHTML = "no face detected<br><br><br><br><br><br>";  // データ文字列の表示
@@ -103,8 +107,8 @@ drawLoop();                                             // drawLoop 関数をト
       return;
     }
 
-    const mediaConnection = peer.call(remoteId.value, localStream);
-    const dataConnection = peer.connect(remoteId.value);
+    mediaConnection = peer.call(remoteId.value, localStream);
+    dataConnection = peer.connect(remoteId.value);
 
     mediaConnection.on('stream', async stream => {
       // Render remote stream for caller
@@ -139,12 +143,16 @@ drawLoop();                                             // drawLoop 関数をト
       remoteVideo.srcObject = null;
     });
 
-    closeTrigger.addEventListener('click', () => mediaConnection.close(true));
+    closeTrigger.addEventListener('click', () => {
+      mediaConnection.close(true);
+      dataConnection.close(true);
+    });
   });
 
   peer.on('connection', dataConnection => {
     dataConnection.once('open', async () => {
       console.log(`=== DataConnection has been opened ===\n`);
+      dataConnection.send("opened");
     });
 
     dataConnection.on('data', data => {
