@@ -74,7 +74,7 @@ function drawLoop() {
     var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
     showEmotionData(emotion);                             // ★感情データを表示
     try{
-      dataConnection.send("hoge");
+      dataConnection.send(JSON.stringify(emotion));
       // postHttpRequest();
     }
     catch(e){
@@ -152,7 +152,6 @@ drawLoop();                                             // drawLoop 関数をト
   peer.on('connection', dataConnection => {
     dataConnection.once('open', async () => {
       console.log(`=== DataConnection has been opened ===\n`);
-      dataConnection.send("opened");
     });
 
     dataConnection.on('data', data => {
