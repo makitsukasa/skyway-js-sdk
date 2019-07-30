@@ -2,20 +2,22 @@ const Peer = window.Peer;
 const localExpression = document.getElementById("local-expression");
 const localVideo = document.getElementById('js-local-stream');
 
-const localStream = navigator.mediaDevices.getUserMedia({
-  video: {
-    facingMode: "user",
-    native: false
-  },
+const userMedia = navigator.mediaDevices.getUserMedia({
+  video: true,
   audio: true,
 })
 .catch(console.error);
 
-// console.log("1");
+localVideo.muted = true;
+localStream = null;
 
-localStream.then((stream) => {
+userMedia.then(stream => {
   localVideo.srcObject = stream;
+  localStream = stream;
 });
+localVideo.playsInline = true;
+localVideo.play().catch(console.error);
+
 // clmtrackr の開始
 var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
 tracker.init(pModel);             // tracker を所定のフェイスモデル（※1）で初期化
@@ -49,10 +51,6 @@ function drawLoop() {
   }
 }
 drawLoop();                                             // drawLoop 関数をトリガー
-
-localVideo.muted = true;
-localVideo.playsInline = true;
-localVideo.play().catch(console.error);
 
 (async function main() {
   const localId = document.getElementById('js-local-id');
