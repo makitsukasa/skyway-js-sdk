@@ -45,12 +45,14 @@ function drawLoop() {
     showEmotionData(emotion);                             // ★感情データを表示
   }
   else{
-    localExpression.innerHTML = "no face detected";                      // データ文字列の表示
+    localExpression.innerHTML = "no face detected<br><br><br><br><br>";  // データ文字列の表示
   }
 }
 drawLoop();                                             // drawLoop 関数をトリガー
 
 localVideo.muted = true;
+localVideo.playsInline = true;
+localVideo.play().catch(console.error);
 
 (async function main() {
   const localId = document.getElementById('js-local-id');
