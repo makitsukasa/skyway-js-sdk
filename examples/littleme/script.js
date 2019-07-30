@@ -45,7 +45,7 @@ function postHttpRequest(){
       }
   }
 
-  xmlHttpRequest.open('GET', 'http://127.0.0.1:8888/?b=72');
+  xmlHttpRequest.open('GET', 'http://192.168.11.100:8888/?b=72');
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -101,6 +101,7 @@ function drawLoop() {
     localExpression.style.background = rgb2hex(getEmotionColor(emotion));
     try{
       dataConnection.send(JSON.stringify(emotion));
+      postHttpRequest();
     }
     catch(e){
       console.log("cahched error: ", e);
