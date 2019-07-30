@@ -14,6 +14,8 @@ const userMedia = navigator.mediaDevices.getUserMedia({
 .catch(console.error);
 
 localVideo.muted = true;
+localVideo.playsInline = true;
+localVideo.play().catch(console.error);
 
 var audioContext = new AudioContext();
 analyser = audioContext.createAnalyser();
@@ -25,8 +27,6 @@ userMedia.then(stream => {
   var source = audioContext.createMediaStreamSource(stream);
   source.connect(analyser);
 });
-localVideo.playsInline = true;
-localVideo.play().catch(console.error);
 
 // clmtrackr の開始
 var tracker = new window.clm.tracker();  // tracker オブジェクトを作成
@@ -63,8 +63,6 @@ function postHttpRequest(){
 function getVolume() {
   var bit8 = new Uint8Array(analyser.frequencyBinCount);
   analyser.getByteFrequencyData(bit8);
-
-  console.log(bit8);
 
   ans = 0;
   for(var i = 3; i < 15; i++){
