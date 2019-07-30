@@ -27,6 +27,32 @@ tracker.start(localVideo);        // video 要素内でフェイストラッキ�
 var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
 classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
 
+function postHttpRequest(){
+  var data = { param1: 'abc', param2: 100 }; // POSTメソッドで送信するデータ
+
+  var xmlHttpRequest = new XMLHttpRequest();
+  xmlHttpRequest.onreadystatechange = function()
+  {
+      var READYSTATE_COMPLETED = 4;
+      var HTTP_STATUS_OK = 200;
+
+      if( this.readyState == READYSTATE_COMPLETED
+      && this.status == HTTP_STATUS_OK )
+      {
+          // レスポンスの表示
+          alert( this.responseText );
+      }
+  }
+
+  xmlHttpRequest.open( 'POST', '192.168.11.100:8888' );
+
+  // サーバに対して解析方法を指定する
+  xmlHttpRequest.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+
+  // データをリクエスト ボディに含めて送信する
+  xmlHttpRequest.send( EncodeHTMLForm( data ) );
+}
+
 // ★感情データの表示
 function showEmotionData(emo) {
   var str ="";                                          // データの文字列を入れる変数
@@ -47,6 +73,7 @@ function drawLoop() {
     showEmotionData(emotion);                             // ★感情データを表示
     try{
       dataConnection.send(emotion);
+      postHttpRequest();
     }
     catch(e){}
   }
