@@ -39,13 +39,14 @@ function showEmotionData(emo) {
 function drawLoop() {
   requestAnimationFrame(drawLoop);                      // drawLoop 関数を繰り返し実行
   var positions = tracker.getCurrentPosition();         // 顔部品の現在位置の取得
-  if(!positions){
-    console.log("no face detected");
-    return;
+  if(positions){
+    var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
+    var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
+    showEmotionData(emotion);                             // ★感情データを表示
   }
-  var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
-  var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
-  showEmotionData(emotion);                             // ★感情データを表示
+  else{
+    localExpression.innerHTML = "no face detected";                      // データ文字列の表示
+  }
 }
 drawLoop();                                             // drawLoop 関数をトリガー
 
