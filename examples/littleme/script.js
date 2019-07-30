@@ -118,8 +118,6 @@ drawLoop();                                             // drawLoop 関数をト
   peer.on('connection', dataConnection => {
     dataConnection.once('open', async () => {
       console.log(`=== DataConnection has been opened ===\n`);
-
-      sendTrigger.addEventListener('click', onClickSend);
     });
 
     dataConnection.on('data', data => {
@@ -128,21 +126,7 @@ drawLoop();                                             // drawLoop 関数をト
 
     dataConnection.once('close', () => {
       console.log(`=== DataConnection has been closed ===\n`);
-      sendTrigger.removeEventListener('click', onClickSend);
     });
-
-    // Register closing handler
-    closeTrigger.addEventListener('click', () => dataConnection.close(), {
-      once: true,
-    });
-
-    function onClickSend() {
-      const data = localText.value;
-      dataConnection.send(data);
-
-      console.log(`You: ${data}\n`);
-      localText.value = '';
-    }
   });
 
   peer.on('error', console.error);
