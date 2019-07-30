@@ -6,7 +6,7 @@ var dataConnection = null;
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: false,
+  audio: true,
 })
 .catch(console.error);
 
@@ -30,8 +30,6 @@ var classifier = new emotionClassifier();               // ★emotionClassifier 
 classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
 
 function postHttpRequest(){
-  var data = { param1: 'abc', param2: 100 }; // POSTメソッドで送信するデータ
-
   var xmlHttpRequest = new XMLHttpRequest();
   xmlHttpRequest.onreadystatechange = function()
   {
@@ -46,13 +44,12 @@ function postHttpRequest(){
       }
   }
 
-  xmlHttpRequest.open('GET', '192.168.11.100:8888');
+  xmlHttpRequest.open('GET', '192.168.11.100:8888?angry=0.5&sad=0.2');
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-  // データをリクエスト ボディに含めて送信する
-  xmlHttpRequest.send(EncodeHTMLForm( data ));
+  xmlHttpRequest.send();
 }
 
 // ★感情データの表示
