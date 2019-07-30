@@ -2,8 +2,10 @@ const Peer = window.Peer;
 const localExpression = document.getElementById("local-expression");
 const remoteExpression = document.getElementById("remote-expression");
 const localVideo = document.getElementById('js-local-stream');
+var localStream = null;
 var mediaConnection = null;
 var dataConnection = null;
+var analyser = null;
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
@@ -12,11 +14,16 @@ const userMedia = navigator.mediaDevices.getUserMedia({
 .catch(console.error);
 
 localVideo.muted = true;
-var localStream = null;
+
+var audioContext = new AudioContext();
+analyser = audioContext.createAnalyser();
+analyser.fftSize = 32;
 
 userMedia.then(stream => {
   localVideo.srcObject = stream;
   localStream = stream;
+  var source = audioContext.createMediaStreamSource(stream);
+  source.connect(analyser);
 });
 localVideo.playsInline = true;
 localVideo.play().catch(console.error);
@@ -53,6 +60,23 @@ function postHttpRequest(){
   xmlHttpRequest.send();
 }
 
+function getVolume() {
+  var bit8 = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(bit8);
+
+  console.log(bit8);
+
+  ans = 0;
+  for(var i = 3; i < 15; i++){
+    ans += bit8[i];
+  }
+  return ans;
+
+  // return bit8.reduce(function(previous, current) {
+  //   return previous + current;
+  // }) / analyser.frequencyBinCount;
+};
+
 function getEmotionColor(emo){
   var dic = {
     "angry": [1, 0, 0],
@@ -61,6 +85,7 @@ function getEmotionColor(emo){
     "sad": [0, 0, 1],
     "surprised": [1, 0, 1],
     "happy": [1, 1, 0],
+    "voice": [0, 0, 0],
   };
   color = [0, 0, 0];
   for(var i = 0; i < emo.length; i++) {                 // 全ての感情（6種類）について
@@ -97,18 +122,19 @@ function drawLoop() {
   if(positions){
     var parameters = tracker.getCurrentParameters();      // ★現在の顔のパラメータを取得
     var emotion = classifier.meanPredict(parameters);     // ★そのパラメータから感情を推定して emotion に結果を入れる
+    emotion.push({emotion: "voice", value: getVolume()});
     localExpression.innerHTML = getEmotionData(emotion);                             // ★感情データを表示
     localExpression.style.background = rgb2hex(getEmotionColor(emotion));
     try{
       dataConnection.send(JSON.stringify(emotion));
-      postHttpRequest();
+      // postHttpRequest();
     }
     catch(e){
       console.log("cahched error: ", e);
     }
   }
   else{
-    localExpression.innerHTML = "no face detected<br><br><br><br><br><br>";  // データ文字列の表示
+    localExpression.innerHTML = String(getVolume()) + "<br><br><br><br><br><br>";
     localExpression.style.background = "white";
   }
 }
