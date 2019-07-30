@@ -7,7 +7,7 @@ var dataConnection = null;
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: false,
+  audio: true,
 })
 .catch(console.error);
 
