@@ -4,7 +4,7 @@ const localVideo = document.getElementById('js-local-stream');
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: true,
+  audio: false,
 })
 .catch(console.error);
 
