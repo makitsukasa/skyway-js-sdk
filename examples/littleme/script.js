@@ -53,7 +53,7 @@ function postHttpRequest(emo1){
       }
   }
 
-  xmlHttpRequest.open('GET', `http://192.168.43.112:8888/?r1=${emo[0]}&g1=${emo[1]}&b1=${emo[2]}&r2=${remoteEmotion[0]}&g2=${remoteEmotion[1]}&b2=${remoteEmotion[2]}`);
+  xmlHttpRequest.open('GET', `http://192.168.43.112:8888/?${emo[0]},${emo[1]},${emo[2]},${remoteEmotion[0]},${remoteEmotion[1]},${remoteEmotion[2]}`);
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
