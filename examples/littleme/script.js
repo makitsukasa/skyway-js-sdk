@@ -52,8 +52,9 @@ function postHttpRequest(emo){
           alert( this.responseText );
       }
   }
-
-  xmlHttpRequest.open('GET', `http://192.168.43.112:8888/?${emo[0]},${emo[1]},${emo[2]},${remoteEmotion[0]},${remoteEmotion[1]},${remoteEmotion[2]}`);
+  query = `http://192.168.43.112:8888/?${emo[0]},${emo[1]},${emo[2]},${remoteEmotion[0]},${remoteEmotion[1]},${remoteEmotion[2]}`;
+  xmlHttpRequest.open('GET', query);
+  console.log(query);
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -125,8 +126,8 @@ function drawLoop() {
     localExpression.innerHTML = getEmotionData(emotion);                             // ★感情データを表示
     localExpression.style.background = rgb2hex(getEmotionColor(emotion));
     try{
+      postHttpRequest(getEmotionColor(emotion));
       dataConnection.send(JSON.stringify(emotion));
-      postHttpRequest(JSON.stringify(getEmotionColor(emotion)));
     }
     catch(e){
       console.log("cahched error: ", e);
