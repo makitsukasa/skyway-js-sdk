@@ -6,6 +6,7 @@ var localStream = null;
 var mediaConnection = null;
 var dataConnection = null;
 var analyser = null;
+var remoteEmotion = [0, 0, 0];
 
 const userMedia = navigator.mediaDevices.getUserMedia({
   video: true,
@@ -37,7 +38,7 @@ tracker.start(localVideo);        // video 要素内でフェイストラッキ�
 var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
 classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
 
-function postHttpRequest(emo){
+function postHttpRequest(emo1){
   var xmlHttpRequest = new XMLHttpRequest();
   xmlHttpRequest.onreadystatechange = function()
   {
@@ -52,7 +53,7 @@ function postHttpRequest(emo){
       }
   }
 
-  xmlHttpRequest.open('GET', `http://192.168.11.100:8888/?r=${emo[0]}&g=${emo[1]}&b=${emo[2]}`);
+  xmlHttpRequest.open('GET', `http://192.168.43.112:8888/?r1=${emo[0]}&g1=${emo[1]}&b1=${emo[2]}&r2=${remoteEmotion[0]}&g2=${remoteEmotion[1]}&b2=${remoteEmotion[2]}`);
 
   // サーバに対して解析方法を指定する
   xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -210,6 +211,7 @@ drawLoop();                                             // drawLoop 関数をト
       console.log(`Remote: ${emotion}\n`);
       remoteExpression.innerHTML = getEmotionData(emotion);                             // ★感情データを表示
       remoteExpression.style.background = rgb2hex(getEmotionColor(emotion));
+      remoteEmotion = getEmotionColor(emotion);
     });
 
     dataConnection.once('close', () => {
