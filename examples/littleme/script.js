@@ -38,7 +38,7 @@ tracker.start(localVideo);        // video 要素内でフェイストラッキ�
 var classifier = new emotionClassifier();               // ★emotionClassifier オブジェクトを作成
 classifier.init(emotionModel);                          // ★classifier を所定の感情モデル（※2）で初期化
 
-function postHttpRequest(emo1){
+function postHttpRequest(emo){
   var xmlHttpRequest = new XMLHttpRequest();
   xmlHttpRequest.onreadystatechange = function()
   {
